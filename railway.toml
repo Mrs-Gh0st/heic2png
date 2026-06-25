@@ -1,0 +1,35 @@
+[build]
+  builder = "nixpacks"
+
+[[services]]
+  name = "backend"
+  source = "backend"
+
+  [services.build]
+    buildCommand = "npm install"
+    startCommand = "npm start"
+
+  [services.deploy]
+    healthcheckPath = "/health"
+    healthcheckTimeout = 30
+    restartPolicyType = "on_failure"
+
+  [[services.variables]]
+    name = "PORT"
+    value = "3001"
+
+  [[services.variables]]
+    name = "NODE_ENV"
+    value = "production"
+
+[[services]]
+  name = "frontend"
+  source = "frontend"
+
+  [services.build]
+    buildCommand = "npm install && npm run build"
+    startCommand = "npx serve dist -l 3000"
+
+  [services.deploy]
+    healthcheckPath = "/"
+    restartPolicyType = "on_failure"
